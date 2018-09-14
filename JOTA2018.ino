@@ -29,6 +29,7 @@ String menuItem5 = "Set MSL";
 String menuItem6 = "Light: ON";
 String menuItem7 = "Brightness";
 String menuItem8 = "Contrast";
+String menuItem9 = "Set Compass";
 
 // EEPROM data - store values every 8 bytes (8 byte EEPROM page) to try and reduce wear.
 // Can store up to 0x3FF
@@ -40,6 +41,7 @@ int eeBrightness = 0x08;
 int eeBacklight = 0x10;
 int eeValid = 0x18;
 int eehPaMSL = 0x20;
+int eeMagBias = 0x28; // and 0x29, 0x2a
 
 int backlightPin = 10;
 
@@ -79,6 +81,9 @@ void setup() {
     backlight = EEPROM.read(eeBacklight);
     contrast = EEPROM.read(eeContrast);
     hPaMSL = EEPROM.read(eehPaMSL);
+    mpu.magbias[0] = EEPROM.read(eeMagBias) * 2;
+    mpu.magbias[1] = EEPROM.read(eeMagBias + 1) * 2;
+    mpu.magbias[2] = EEPROM.read(eeMagBias + 2) * 2;
   }
   else // write defaults if not valid.
   {
@@ -87,6 +92,9 @@ void setup() {
     EEPROM.write(eeContrast, contrast);
     EEPROM.write(eeValid, 0xfa);
     EEPROM.write(eehPaMSL, hPaMSL);
+    EEPROM.write(eeMagBias, uint8_t(0));
+    EEPROM.write(eeMagBias + 1, uint8_t(0));
+    EEPROM.write(eeMagBias + 2, uint8_t(0));
   }
 
   // initalise backlight PWM pin
@@ -204,7 +212,7 @@ void loop() {
     menuitem--;
     if (menuitem == 0)
     {
-      menuitem = 8;
+      menuitem = 9;
     }
   }
   else if (up && page == 2 && menuitem == 7 ) {
@@ -215,7 +223,7 @@ void loop() {
   }
   else if (up && page == 2 && menuitem == 8 ) {
     up = false;
-    if (contrast > 0) contrast--;
+    if (contrast > 5) contrast--;
     setContrast();
   }
   else if (up && page == 2 && menuitem == 5) {
@@ -229,7 +237,7 @@ void loop() {
   {
     down = false;
     menuitem++;
-    if (menuitem == 9)
+    if (menuitem > 9)
     {
       menuitem = 1;
     }
@@ -243,7 +251,7 @@ void loop() {
   }
   else if (down && page == 2 && menuitem == 8) {
     down = false;
-    if (contrast < 31) contrast++;
+    if (contrast < 16) contrast++;
     setContrast();
   }
   else if (down && page == 2 && menuitem == 5) {
@@ -270,7 +278,10 @@ void loop() {
     else if (page == 1 && menuitem == 4) {
       page = 2;
     }
-     else if (page == 1 && menuitem == 1) {
+    else if (page == 1 && menuitem == 2) {
+      page = 2;
+    }
+    else if (page == 1 && menuitem == 1) {
       page = 2;
     }
     else if (page == 2)
@@ -357,6 +368,3 @@ void readRotaryEncoder()
     delay(150);
   }
 }
-
-
-

@@ -18,86 +18,94 @@ void drawMenu()
       displayMenuItem(menuItem1, 25, true);
       displayMenuItem(menuItem2, 35, false);
     }
-    else if (menuitem == 2 )
+    else if (menuitem == 2)
     {
       displayMenuItem(menuItem1, 15, false);
       displayMenuItem(menuItem2, 25, true);
       displayMenuItem(menuItem3, 35, false);
     }
-    else if (menuitem == 3 )
+    else if (menuitem == 3)
     {
       displayMenuItem(menuItem2, 15, false);
       displayMenuItem(menuItem3, 25, true);
       displayMenuItem(menuItem4, 35, false);
     }
-    else if (menuitem == 4 )
+    else if (menuitem == 4)
     {
       displayMenuItem(menuItem3, 15, false);
       displayMenuItem(menuItem4, 25, true);
       displayMenuItem(menuItem5, 35, false);
     }
-
-    else if (menuitem == 5 )
+    else if (menuitem == 5)
     {
       displayMenuItem(menuItem4, 15, false);
       displayMenuItem(menuItem5, 25, true);
       displayMenuItem(menuItem6, 35, false);
     }
-    else if (menuitem == 6 )
+    else if (menuitem == 6)
     {
       displayMenuItem(menuItem5, 15, false);
       displayMenuItem(menuItem6, 25, true);
       displayMenuItem(menuItem7, 35, false);
     }
-
-    else if (menuitem == 7 )
+    else if (menuitem == 7)
     {
       displayMenuItem(menuItem6, 15, false);
       displayMenuItem(menuItem7, 25, true);
       displayMenuItem(menuItem8, 35, false);
     }
-
-    else if (menuitem == 8 )
+    else if (menuitem == 8)
     {
       displayMenuItem(menuItem7, 15, false);
       displayMenuItem(menuItem8, 25, true);
+      displayMenuItem(menuItem9, 35, false);
+    }
+    else if (menuitem == 9)
+    {
+      displayMenuItem(menuItem8, 15, false);
+      displayMenuItem(menuItem9, 25, true);
       displayMenuItem("", 35, false);
     }
-
     display.display();
   }
-
-  else if (page == 2 && menuitem == 1)
+  else if (page == 2)
   {
-    temperature();
-  }
-  else if (page == 2 && menuitem == 2)
-  {
-    //Call Compass
-  }
-  else if (page == 2 && menuitem == 3)
-  {
-    //Call Level
-  }
-
-  else if (page == 2 && menuitem == 4)
-  {
-    altitude();
-  }
-  else if (page == 2 && menuitem == 5)
-  {
-    displayIntMenuPage(menuItem5, hPaMSL + 900);
-  }
-  // Item 6 toggles backlight
-
-  else if (page == 2 && menuitem == 7)
-  {
-    displayIntMenuPage(menuItem7, brightness);
-  }
-
-  else if (page == 2 && menuitem == 8)
-  {
-    displayIntMenuPage(menuItem8, contrast);
+    if (menuitem == 1)
+    {
+      temperature();
+    }
+    else if (menuitem == 2)
+    {
+      // calibrate if not done already
+      if (mpu.magbias[0] == 0 && mpu.magbias[1] == 0) magcalMPU9250();
+      compass();
+    }
+    else if (menuitem == 3)
+    {
+      //Call Level
+    }
+    else if (menuitem == 4)
+    {
+      altitude();
+    }
+    else if (menuitem == 5)
+    {
+      displayIntMenuPage(menuItem5, hPaMSL + 900);
+    }
+    // Item 6 toggles backlight
+    else if (menuitem == 7)
+    {
+      displayIntMenuPage(menuItem7, brightness);
+    }
+    else if (menuitem == 8)
+    {
+      displayIntMenuPage(menuItem8, contrast);
+    }
+    else if (menuitem == 9)
+    {
+      magcalMPU9250();
+      page = 1;  // only run once
+    }
   }
 }
 
