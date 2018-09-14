@@ -20,7 +20,7 @@
 
 int menuitem = 1;
 int page  = 1;
-char* menuItem[] = {"" , "Weather", "Compass", "Level", "Altitude", "Cal Air Pres", "Light: On", "Brightness", "Cal Compass", "Contrast", ""};
+char* menuItem[] = {"" , "Weather", "Compass", "Level", "Altitude", "Light: On", "Brightness", "Cal Compass", "Contrast", ""};
 int menuItems = 11; // Text items plus 2 for first and last
 
 // EEPROM data - store values every 8 bytes (8 byte EEPROM page) to try and reduce wear.
@@ -78,12 +78,12 @@ void setup() {
     mpu.magbias[2] = EEPROM.read(eeMagBias + 2) * 2;
     if (backlight)
     {
-      menuItem[6] = "Light: On";
+      menuItem[5] = "Light: On";
       turnBacklightOn();
     }
     else
     {
-      menuItem[6] = "Light: Off";
+      menuItem[5] = "Light: Off";
       turnBacklightOff();
     }
   }
@@ -97,6 +97,7 @@ void setup() {
     EEPROM.write(eeMagBias, uint8_t(0));
     EEPROM.write(eeMagBias + 1, uint8_t(0));
     EEPROM.write(eeMagBias + 2, uint8_t(0));
+    menuitem = 8;
   }
 
   // initalise backlight PWM pin
@@ -213,21 +214,21 @@ void loop() {
     menuitem--;
     if (menuitem < 1)
     {
-      menuitem = 9;
+      menuitem = 8;
     }
   }
-  else if (up && page == 2 && menuitem == 5) {
+  else if (up && page == 2 && menuitem == 4) {
     up = false;
     if (hPaMSL > 0) hPaMSL--;
     EEPROM.write(eehPaMSL, hPaMSL);
   }
-  else if (up && page == 2 && menuitem == 7 ) {
+  else if (up && page == 2 && menuitem == 6 ) {
     up = false;
     if (brightness > 0) brightness--;
     turnBacklightOn();
     EEPROM.write(eeBrightness, brightness);
   }
-  else if (up && page == 2 && menuitem == 9 ) {
+  else if (up && page == 2 && menuitem == 8 ) {
     up = false;
     if (contrast > 5) contrast--;
     setContrast();
@@ -237,23 +238,23 @@ void loop() {
   {
     down = false;
     menuitem++;
-    if (menuitem > 9)
+    if (menuitem > 8)
     {
       menuitem = 1;
     }
   }
-  else if (down && page == 2 && menuitem == 5) {
+  else if (down && page == 2 && menuitem == 4) {
     down = false;
     if (hPaMSL < 255) hPaMSL++;
     EEPROM.write(eehPaMSL, hPaMSL);
   }
-  else if (down && page == 2 && menuitem == 7) {
+  else if (down && page == 2 && menuitem == 6) {
     down = false;
     if (brightness < 31) brightness++;
     turnBacklightOn();
     EEPROM.write(eeBrightness, brightness);
   }
-  else if (down && page == 2 && menuitem == 9) {
+  else if (down && page == 2 && menuitem == 8) {
     down = false;
     if (contrast < 16) contrast++;
     setContrast();
@@ -263,7 +264,7 @@ void loop() {
   {
     middle = false;
 
-    if ( page == 1 && menuitem == 6) // Backlight On / Off Control
+    if ( page == 1 && menuitem == 5) // Backlight On / Off Control
     {
       setbacklight();
     }
@@ -282,14 +283,14 @@ void setbacklight() {
   if (backlight)
   {
     backlight = false;
-    menuItem[6] = "Light: Off";
+    menuItem[5] = "Light: Off";
     turnBacklightOff();
     EEPROM.write(eeBacklight, backlight);
   }
   else
   {
     backlight = true;
-    menuItem[6] = "Light: On";
+    menuItem[5] = "Light: On";
     turnBacklightOn();
     EEPROM.write(eeBacklight, backlight);
   }

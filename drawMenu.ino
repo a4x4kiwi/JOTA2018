@@ -39,23 +39,21 @@ void drawMenu()
     {
       altitude();
     }
-    else if (menuitem == 5) // Set air pressure at sea level
+    
+    // Menu Item 5 toggles backlight
+    
+    else if (menuitem == 6) //Adjust Backlight Brightness
     {
-      displayIntMenuPage(menuItem[5], hPaMSL + 900);
+      displayIntMenuPage(menuItem[6], brightness);
     }
-    // Menu Item 6 toggles backlight
-    else if (menuitem == 7) //Adjust Backlight Brightness
-    {
-      displayIntMenuPage(menuItem[7], brightness);
-    }
-    else if (menuitem == 8) // Calibrate Compass
+    else if (menuitem == 7) // Calibrate Compass
     {
       magcalMPU9250();
       page = 1;  // only run once
     }
-    else if (menuitem == 9) //Adjust Contrast
+    else if (menuitem == 8) //Adjust Contrast
     {
-      displayIntMenuPage(menuItem[9], contrast);
+      displayIntMenuPage(menuItem[8], contrast);
     }
   }
 }

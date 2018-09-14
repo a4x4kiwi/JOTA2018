@@ -20,5 +20,5 @@ void altitude()
   display.print(" hPa");
   
   display.display();
-  delay(500);
+  delay(100);
 }
