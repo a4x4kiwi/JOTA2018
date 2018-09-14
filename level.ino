@@ -26,8 +26,8 @@ void level() {
     accY = (float)mpu.accelCount[1] * mpu.aRes - mpu.accelBias[1];
     accZ = (float)mpu.accelCount[2] * mpu.aRes - mpu.accelBias[2];
 
-    angleX = (int)(atan2(accX, accZ) * 180 / PI);
-    angleY = (int)(atan2(accY, accZ) * 180 / PI);
+    angleX = (int)round((atan2(accX, accZ) * 180 / PI));
+    angleY = (int)round((atan2(accY, accZ) * 180 / PI));
 
     display.setCursor(0, 10);
     display.print("x=");
