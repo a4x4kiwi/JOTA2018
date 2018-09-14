@@ -9,7 +9,7 @@
 #include <Adafruit_PCD8544.h>
 #include <ClickEncoder.h>
 #include <TimerOne.h>
-#include <MPU9250.h>
+#include <MPU9250.h> //sparkfun library
 #include <quaternionFilters.h>
 #include <Adafruit_BME280.h>
 //#include <Adafruit_SI1145.h>
@@ -20,16 +20,8 @@
 
 int menuitem = 1;
 int page  = 1;
-
-String menuItem1 = "Temperature";
-String menuItem2 = "Compass";
-String menuItem3 = "Level";
-String menuItem4 = "Altitude";
-String menuItem5 = "Set MSL";
-String menuItem6 = "Light: ON";
-String menuItem7 = "Brightness";
-String menuItem8 = "Contrast";
-String menuItem9 = "Set Compass";
+char* menuItem[]={"" ,"Weather","Compass","Level","Altitude","Set Air Pres","Light: On","Brightness","Cal Compass","Contrast",""};
+int menuItems = 11; // Text items plus 2 for first and last
 
 // EEPROM data - store values every 8 bytes (8 byte EEPROM page) to try and reduce wear.
 // Can store up to 0x3FF
@@ -84,6 +76,16 @@ void setup() {
     mpu.magbias[0] = EEPROM.read(eeMagBias) * 2;
     mpu.magbias[1] = EEPROM.read(eeMagBias + 1) * 2;
     mpu.magbias[2] = EEPROM.read(eeMagBias + 2) * 2;
+   if (backlight)
+  {
+    menuItem[6] = "Light: On";
+    turnBacklightOn();
+    }
+  else
+  {
+   menuItem[6] = "Light: Off";
+    turnBacklightOff();
+   }
   }
   else // write defaults if not valid.
   {
@@ -210,10 +212,15 @@ void loop() {
   {
     up = false;
     menuitem--;
-    if (menuitem == 0)
+    if (menuitem < 1)
     {
       menuitem = 9;
     }
+  }
+    else if (up && page == 2 && menuitem == 5) {
+    up = false;
+    if (hPaMSL > 0) hPaMSL--;
+    EEPROM.write(eehPaMSL, hPaMSL);
   }
   else if (up && page == 2 && menuitem == 7 ) {
     up = false;
@@ -221,17 +228,11 @@ void loop() {
     turnBacklightOn();
     EEPROM.write(eeBrightness, brightness);
   }
-  else if (up && page == 2 && menuitem == 8 ) {
+  else if (up && page == 2 && menuitem == 9 ) {
     up = false;
     if (contrast > 5) contrast--;
     setContrast();
   }
-  else if (up && page == 2 && menuitem == 5) {
-    up = false;
-    if (hPaMSL > 0) hPaMSL--;
-    EEPROM.write(eehPaMSL, hPaMSL);
-  }
-
 
   if (down && page == 1) // We have turned the Rotary Encoder Clockwise
   {
@@ -241,7 +242,11 @@ void loop() {
     {
       menuitem = 1;
     }
-
+  }
+    else if (down && page == 2 && menuitem == 5) {
+    down = false;
+    if (hPaMSL < 255) hPaMSL++;
+    EEPROM.write(eehPaMSL, hPaMSL);
   }
   else if (down && page == 2 && menuitem == 7) {
     down = false;
@@ -249,39 +254,21 @@ void loop() {
     turnBacklightOn();
     EEPROM.write(eeBrightness, brightness);
   }
-  else if (down && page == 2 && menuitem == 8) {
+  else if (down && page == 2 && menuitem == 9) {
     down = false;
     if (contrast < 16) contrast++;
     setContrast();
   }
-  else if (down && page == 2 && menuitem == 5) {
-    down = false;
-    if (hPaMSL < 255) hPaMSL++;
-    EEPROM.write(eehPaMSL, hPaMSL);
-  }
-
 
   if (middle) //Middle Button is Pressed
   {
     middle = false;
 
-    if ( menuitem == 6) // Backlight On / Off Control
+    if ( page == 1 && menuitem == 6) // Backlight On / Off Control
     {
       setbacklight();
     }
-    else if (page == 1 && menuitem >= 7) {
-      page = 2;
-    }
-    else if (page == 1 && menuitem == 5) {
-      page = 2;
-    }
-    else if (page == 1 && menuitem == 4) {
-      page = 2;
-    }
-    else if (page == 1 && menuitem == 2) {
-      page = 2;
-    }
-    else if (page == 1 && menuitem == 1) {
+    else if (page == 1) {
       page = 2;
     }
     else if (page == 2)
@@ -296,14 +283,14 @@ void setbacklight() {
   if (backlight)
   {
     backlight = false;
-    menuItem6 = "Light: OFF";
+    menuItem[6] = "Light: Off";
     turnBacklightOff();
     EEPROM.write(eeBacklight, backlight);
   }
   else
   {
     backlight = true;
-    menuItem6 = "Light: ON";
+    menuItem[6] = "Light: On";
     turnBacklightOn();
     EEPROM.write(eeBacklight, backlight);
   }
@@ -342,7 +329,7 @@ void displayIntMenuPage(String menuItem, int value)
   display.setTextSize(1);
   display.clearDisplay();
   display.setTextColor(BLACK, WHITE);
-  display.setCursor(15, 0);
+  display.setCursor(5, 0);
   display.print(menuItem);
   display.drawFastHLine(0, 10, 83, BLACK);
   display.setCursor(5, 15);
