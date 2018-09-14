@@ -20,7 +20,7 @@
 
 int menuitem = 1;
 int page  = 1;
-char* menuItem[] = {"" , "Weather", "Compass", "Level", "Altitude", "Set Air Pres", "Light: On", "Brightness", "Cal Compass", "Contrast", ""};
+char* menuItem[] = {"" , "Weather", "Compass", "Level", "Altitude", "Cal Air Pres", "Light: On", "Brightness", "Cal Compass", "Contrast", ""};
 int menuItems = 11; // Text items plus 2 for first and last
 
 // EEPROM data - store values every 8 bytes (8 byte EEPROM page) to try and reduce wear.
