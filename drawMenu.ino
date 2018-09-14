@@ -15,7 +15,7 @@ void drawMenu()
     displayMenuItem(menuItem[menuitem - 1], 15, false);
     displayMenuItem(menuItem[menuitem], 25, true);
     displayMenuItem(menuItem[menuitem + 1], 35, false);
-  
+
     display.display();
   }
 

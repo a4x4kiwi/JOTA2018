@@ -20,7 +20,7 @@
 
 int menuitem = 1;
 int page  = 1;
-char* menuItem[]={"" ,"Weather","Compass","Level","Altitude","Set Air Pres","Light: On","Brightness","Cal Compass","Contrast",""};
+char* menuItem[] = {"" , "Weather", "Compass", "Level", "Altitude", "Set Air Pres", "Light: On", "Brightness", "Cal Compass", "Contrast", ""};
 int menuItems = 11; // Text items plus 2 for first and last
 
 // EEPROM data - store values every 8 bytes (8 byte EEPROM page) to try and reduce wear.
@@ -76,16 +76,16 @@ void setup() {
     mpu.magbias[0] = EEPROM.read(eeMagBias) * 2;
     mpu.magbias[1] = EEPROM.read(eeMagBias + 1) * 2;
     mpu.magbias[2] = EEPROM.read(eeMagBias + 2) * 2;
-   if (backlight)
-  {
-    menuItem[6] = "Light: On";
-    turnBacklightOn();
+    if (backlight)
+    {
+      menuItem[6] = "Light: On";
+      turnBacklightOn();
     }
-  else
-  {
-   menuItem[6] = "Light: Off";
-    turnBacklightOff();
-   }
+    else
+    {
+      menuItem[6] = "Light: Off";
+      turnBacklightOff();
+    }
   }
   else // write defaults if not valid.
   {
@@ -177,10 +177,9 @@ void setup() {
   display.println(MPUWhoAmI, HEX);
   display.display();
 
-  // Calibrate gyro and accelerometers, load biases in bias registers
-  mpu.calibrateMPU9250(mpu.gyroBias, mpu.accelBias);
   // Initialize device for active mode read of acclerometer, gyroscope, and temperature
   mpu.initMPU9250();
+
   // Get magnetometer calibration from AK8963 ROM
   mpu.initAK8963(mpu.magCalibration);
 
@@ -217,7 +216,7 @@ void loop() {
       menuitem = 9;
     }
   }
-    else if (up && page == 2 && menuitem == 5) {
+  else if (up && page == 2 && menuitem == 5) {
     up = false;
     if (hPaMSL > 0) hPaMSL--;
     EEPROM.write(eehPaMSL, hPaMSL);
@@ -243,7 +242,7 @@ void loop() {
       menuitem = 1;
     }
   }
-    else if (down && page == 2 && menuitem == 5) {
+  else if (down && page == 2 && menuitem == 5) {
     down = false;
     if (hPaMSL < 255) hPaMSL++;
     EEPROM.write(eehPaMSL, hPaMSL);
@@ -354,4 +353,49 @@ void readRotaryEncoder()
     up = true;
     delay(150);
   }
+}
+
+
+int autoScale( int originalMin, int originalMax, int newBegin, int newEnd, int inputValue) {
+
+  long zeroRefOriginalMax = 0;
+  long zeroRefnewEnd = 0;
+  long zeroRefCurVal = 0;
+  long rangedValue = 0;
+  boolean invFlag = 0;
+
+  // Check for out of range inputValues
+  if (inputValue < originalMin) {
+    inputValue = originalMin;
+  }
+  if (inputValue > originalMax) {
+    inputValue = originalMax;
+  }
+
+  // Zero Refference the values
+  zeroRefOriginalMax = originalMax - originalMin;
+
+  if (newEnd > newBegin) {
+    zeroRefnewEnd = newEnd - newBegin;
+  }
+  else
+  {
+    zeroRefnewEnd = newBegin - newEnd;
+    invFlag = 1;
+  }
+
+  zeroRefCurVal = inputValue - originalMin;
+
+  // Check for originalMin > originalMax  - the math for all other cases i.e. negative numbers seems to work out fine
+  if (originalMin > originalMax ) {
+    return 0;
+  }
+  if (invFlag == 0) {
+    rangedValue =  ((zeroRefCurVal * zeroRefnewEnd) / zeroRefOriginalMax) + newBegin ;
+  }
+  else     // invert the ranges
+  {
+    rangedValue =  newBegin - ((zeroRefCurVal * zeroRefnewEnd) / zeroRefOriginalMax)  ;
+  }
+  return rangedValue;
 }
