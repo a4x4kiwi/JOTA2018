@@ -73,9 +73,9 @@ void setup() {
     backlight = EEPROM.read(eeBacklight);
     contrast = EEPROM.read(eeContrast);
     hPaMSL = EEPROM.read(eehPaMSL);
-    mpu.magbias[0] = EEPROM.read(eeMagBias) * 2;
-    mpu.magbias[1] = EEPROM.read(eeMagBias + 1) * 2;
-    mpu.magbias[2] = EEPROM.read(eeMagBias + 2) * 2;
+    mpu.magbias[0] = (int8_t)EEPROM.read(eeMagBias) * 4;
+    mpu.magbias[1] = (int8_t)EEPROM.read(eeMagBias + 1) * 4;
+    mpu.magbias[2] = (int8_t)EEPROM.read(eeMagBias + 2) * 4;
     if (backlight)
     {
       menuItem[5] = "Light: On";
@@ -94,10 +94,10 @@ void setup() {
     EEPROM.write(eeContrast, contrast);
     EEPROM.write(eeValid, 0xfa);
     EEPROM.write(eehPaMSL, hPaMSL);
-    EEPROM.write(eeMagBias, uint8_t(0));
-    EEPROM.write(eeMagBias + 1, uint8_t(0));
-    EEPROM.write(eeMagBias + 2, uint8_t(0));
-    menuitem = 8;
+    EEPROM.write(eeMagBias, int8_t(0));
+    EEPROM.write(eeMagBias + 1, int8_t(0));
+    EEPROM.write(eeMagBias + 2, int8_t(0));
+    menuitem = 8; // start with contrast adjustment
   }
 
   // initalise backlight PWM pin

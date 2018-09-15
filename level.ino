@@ -9,9 +9,9 @@ void level() {
   display.setCursor(0, 0);
   display.print("Level");
   display.drawFastHLine(0, 8, 30, BLACK);
-  display.drawCircle(59, 23, 23, BLACK);
+  display.drawCircle(59, 23, 23, BLACK); // big circle
   display.drawCircle(59, 23, 11, BLACK);
-  display.drawCircle(59, 23, 5, BLACK);
+  display.drawCircle(59, 23, 5, BLACK); //centre circle
 
 
   if (mpu.readByte(MPU9250_ADDRESS, INT_STATUS) & 0x01)
@@ -26,8 +26,8 @@ void level() {
     accY = (float)mpu.accelCount[1] * mpu.aRes - mpu.accelBias[1];
     accZ = (float)mpu.accelCount[2] * mpu.aRes - mpu.accelBias[2];
 
-    angleX = (int)round((atan2(accX, accZ) * 180 / PI));
-    angleY = (int)round((atan2(accY, accZ) * 180 / PI));
+    angleX = (int)round((atan2(accX, accZ) * RAD_TO_DEG));
+    angleY = (int)round((atan2(accY, accZ) * RAD_TO_DEG));
 
     display.setCursor(0, 10);
     display.print("x=");
