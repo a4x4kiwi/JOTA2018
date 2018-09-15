@@ -66,7 +66,7 @@ void compass()
     display.setTextSize(1);
     display.setCursor(0, 30);
     display.print("Deg");
-    display.setCursor(0, 41);
+    display.setCursor(0, 40);
     display.print("Magnetic");
 
     // Mark points of compass
@@ -94,12 +94,10 @@ void compass()
                          autoScale(-100, 100, 43, 75, (int)(sin(((pointer + 200) * -1) / RAD_TO_DEG) * 100.0)),
                          autoScale(-100, 100,  39, 7, (int)(cos(((pointer + 200) * -1) / RAD_TO_DEG) * 100.0)),
                          BLACK);
-
-
   }
   mpu.updateTime();
   display.display();
-  delay(500);
+  delay(200);
 }
 
 void magcalMPU9250()
