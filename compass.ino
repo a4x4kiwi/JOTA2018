@@ -1,6 +1,7 @@
 void compass()
 {
   int pointer = 0;
+
   display.setTextSize(1);
   display.clearDisplay();
   display.setTextColor(BLACK, WHITE);
@@ -57,13 +58,44 @@ void compass()
     pointer = int(atan2(mpu.my, mpu.mx) * RAD_TO_DEG);
     pointer *= -1;
     if (pointer < 0) pointer = 360 + pointer;
-    display.setTextSize(2);
-    display.setCursor(0, 20);
 
+    display.setTextSize(2);
+    display.setCursor(0, 12);
     display.print(pointer);
-    display.setCursor(0, 39);
+
     display.setTextSize(1);
-    display.print("degrees");
+    display.setCursor(0, 30);
+    display.print("Deg");
+    display.setCursor(0, 41);
+    display.print("Magnetic");
+
+    // Mark points of compass
+    display.setCursor(autoScale(-100, 100, 35, 78, (int)(sin((pointer * -1) / RAD_TO_DEG) * 100.0)),
+                      autoScale(-100, 100, 40, 0, (int)(cos((pointer * -1) / RAD_TO_DEG) * 100.0))); // 100 is arbatory
+    display.print("N");
+
+    display.setCursor(autoScale(-100, 100, 35, 78, (int)(sin(((pointer + 180) * -1) / RAD_TO_DEG) * 100.0)),
+                      autoScale(-100, 100, 40, 0, (int)(cos(((pointer + 180) * -1) / RAD_TO_DEG) * 100.0))); // 100 is arbatory
+    display.print("S");
+
+    display.setCursor(autoScale(-100, 100, 35, 78, (int)(sin(((pointer + 90) * -1) / RAD_TO_DEG) * 100.0)),
+                      autoScale(-100, 100, 40, 0, (int)(cos(((pointer + 90) * -1) / RAD_TO_DEG) * 100.0))); // 100 is arbatory
+    display.print("W");
+
+    display.setCursor(autoScale(-100, 100, 35, 78, (int)(sin(((pointer + 270) * -1) / RAD_TO_DEG) * 100.0)),
+                      autoScale(-100, 100, 40, 0, (int)(cos(((pointer + 270) * - 1) / RAD_TO_DEG) * 100.0))); // 100 is arbatory
+    display.print("E");
+
+
+    display.fillTriangle(autoScale(-100, 100, 43, 75, (int)(sin((pointer * -1) / RAD_TO_DEG) * 100.0)),
+                         autoScale(-100, 100, 39, 7, (int)(cos((pointer * -1) / RAD_TO_DEG) * 100.0)),
+                         autoScale(-100, 100, 43, 75, (int)(sin(((pointer + 160) * -1) / RAD_TO_DEG) * 100.0)),
+                         autoScale(-100, 100, 39, 7, (int)(cos(((pointer + 160) * -1) / RAD_TO_DEG) * 100.0)),
+                         autoScale(-100, 100, 43, 75, (int)(sin(((pointer + 200) * -1) / RAD_TO_DEG) * 100.0)),
+                         autoScale(-100, 100,  39, 7, (int)(cos(((pointer + 200) * -1) / RAD_TO_DEG) * 100.0)),
+                         BLACK);
+
+
   }
   mpu.updateTime();
   display.display();
