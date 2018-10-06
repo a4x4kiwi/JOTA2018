@@ -25,35 +25,35 @@ void drawMenu()
     {
       temperature();
     }
-    else if (menuitem == 2) //Compass
+ /*   else if (menuitem == 2) //Compass
     {
       // calibrate if not done already
       if (mpu.magbias[0] == 0 && mpu.magbias[1] == 0) magcalMPU9250();
       compass();
-    }
-    else if (menuitem == 3) //Level
+    }*/
+    else if (menuitem == 2) //Level
     {
       level();
     }
-    else if (menuitem == 4) //Altitude
+    else if (menuitem == 3) //Altitude
     {
       altitude();
     }
     
     // Menu Item 5 toggles backlight
     
-    else if (menuitem == 6) //Adjust Backlight Brightness
+    else if (menuitem == 5) //Adjust Backlight Brightness
     {
-      displayIntMenuPage(menuItem[6], brightness);
+      displayIntMenuPage(menuItem[5], brightness);
     }
-    else if (menuitem == 7) // Calibrate Compass
+/*    else if (menuitem == 7) // Calibrate Compass
     {
       magcalMPU9250();
       page = 1;  // only run once
-    }
-    else if (menuitem == 8) //Adjust Contrast
+    }*/
+    else if (menuitem == 6) //Adjust Contrast
     {
-      displayIntMenuPage(menuItem[8], contrast);
+      displayIntMenuPage(menuItem[6], contrast);
     }
   }
 }
