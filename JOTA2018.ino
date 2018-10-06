@@ -216,7 +216,7 @@ void loop() {
     menuitem--;
     if (menuitem < 1)
     {
-      menuitem = 8;
+      menuitem = 6;
     }
   }
   else if (up && page == 2 && menuitem == 3) { //Altitude
@@ -240,7 +240,7 @@ void loop() {
   {
     down = false;
     menuitem++;
-    if (menuitem > 8)
+    if (menuitem > 6)
     {
       menuitem = 1;
     }
